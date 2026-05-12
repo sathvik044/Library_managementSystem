@@ -11,5 +11,6 @@ import com.example.Libary_backend.entity.IssueRecord;
 public interface IssueRecordRepository extends JpaRepository<IssueRecord, Long> {
 
     List<IssueRecord> findByMember(Member member);
-
+    
+    long countByMemberMemberIdAndReturnDateIsNull(Long memberId);
 }

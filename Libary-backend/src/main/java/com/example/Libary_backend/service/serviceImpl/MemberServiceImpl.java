@@ -1,4 +1,4 @@
-package com.example.Libary_backend.service.impl;
+package com.example.Libary_backend.service.serviceImpl;
 
 import com.example.Libary_backend.dto.request.MemberRequestDTO;
 import com.example.Libary_backend.dto.response.MemberResponseDTO;
