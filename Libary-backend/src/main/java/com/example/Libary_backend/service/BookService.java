@@ -2,8 +2,8 @@ package com.example.Libary_backend.service;
 
 import java.util.List;
 
-import com.example.Libary_backend.dto.BookRequestDTO;
-import com.example.Libary_backend.dto.BookResponseDTO;
+import com.example.Libary_backend.dto.request.BookResponseDTO;
+import com.example.Libary_backend.dto.response.BookRequestDTO;
 
 public interface BookService {
 

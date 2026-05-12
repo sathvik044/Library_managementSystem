@@ -1,4 +1,4 @@
-package com.example.Libary_backend.dto;
+package com.example.Libary_backend.dto.request;
 
 public class BookResponseDTO {
 

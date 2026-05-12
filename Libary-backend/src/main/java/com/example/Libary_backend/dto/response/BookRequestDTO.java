@@ -1,4 +1,4 @@
-package com.example.Libary_backend.dto;
+package com.example.Libary_backend.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

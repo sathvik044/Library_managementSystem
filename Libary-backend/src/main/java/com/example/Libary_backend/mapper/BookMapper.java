@@ -2,8 +2,8 @@ package com.example.Libary_backend.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.example.Libary_backend.dto.BookRequestDTO;
-import com.example.Libary_backend.dto.BookResponseDTO;
+import com.example.Libary_backend.dto.request.BookResponseDTO;
+import com.example.Libary_backend.dto.response.BookRequestDTO;
 import com.example.Libary_backend.entity.Book;
 
 @Component

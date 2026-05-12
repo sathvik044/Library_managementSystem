@@ -1,11 +1,11 @@
-package com.example.Libary_backend.service.impl;
+package com.example.Libary_backend.service.serviceImpl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.Libary_backend.dto.BookRequestDTO;
-import com.example.Libary_backend.dto.BookResponseDTO;
+import com.example.Libary_backend.dto.request.BookResponseDTO;
+import com.example.Libary_backend.dto.response.BookRequestDTO;
 import com.example.Libary_backend.entity.Book;
 import com.example.Libary_backend.mapper.BookMapper;
 import com.example.Libary_backend.repository.BookRepository;
