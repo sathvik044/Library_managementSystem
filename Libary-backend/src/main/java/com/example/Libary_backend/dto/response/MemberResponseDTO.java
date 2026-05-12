@@ -1,5 +1,4 @@
-package com.example.Libary_backend.dto;
-
+package com.example.Libary_backend.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberRequestDTO {
+public class MemberResponseDTO {
+
+    private Long memberId;
 
     private String name;
 
