@@ -7,8 +7,10 @@ import com.example.Libary_backend.entity.Book;
 import com.example.Libary_backend.entity.IssueRecord;
 import com.example.Libary_backend.entity.Member;
 import com.example.Libary_backend.exception.BookAlreadyIssuedException;
+import com.example.Libary_backend.exception.BookNotFoundException;
 import com.example.Libary_backend.exception.IssueRecordNotFoundException;
 import com.example.Libary_backend.exception.MemberMaxBooksExceededException;
+import com.example.Libary_backend.exception.MemberNotFoundException;
 import com.example.Libary_backend.mapper.IssueRecordMapper;
 import com.example.Libary_backend.repository.BookRepository;
 import com.example.Libary_backend.repository.IssueRecordRepository;
@@ -46,10 +48,10 @@ public class IssueRecordServiceImpl implements IssueRecordService {
         
         // Fetch book and member
         Book book = bookRepository.findById(requestDTO.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
         
         Member member = memberRepository.findById(requestDTO.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
         // Rule 1: Check if book is available
         if (!book.getAvailability()) {
@@ -114,7 +116,7 @@ public class IssueRecordServiceImpl implements IssueRecordService {
     @Override
     public List<IssueRecordResponseDTO> getIssueRecordsByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
         
         List<IssueRecord> issueRecords = issueRecordRepository.findByMember(member);
         
