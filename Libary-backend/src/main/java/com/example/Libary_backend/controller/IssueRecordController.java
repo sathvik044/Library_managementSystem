@@ -30,13 +30,24 @@ public class IssueRecordController {
     }
 
     /**
-     * Return a book to the library
+     * Return a book to the library (Path Variable)
      * PUT /api/issue-records/return/{issueId}
      */
     @PutMapping("/return/{issueId}")
     public ResponseEntity<IssueRecordResponseDTO> returnBook(
             @PathVariable Long issueId) {
         IssueRecordResponseDTO response = issueRecordService.returnBook(issueId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Return a book to the library (Request Body - Fallback)
+     * PUT /api/issue-records/return
+     */
+    @PutMapping("/return")
+    public ResponseEntity<IssueRecordResponseDTO> returnBookFallback(
+            @RequestBody ReturnBookRequestDTO requestDTO) {
+        IssueRecordResponseDTO response = issueRecordService.returnBook(requestDTO.getIssueId());
         return ResponseEntity.ok(response);
     }
 
@@ -58,8 +69,7 @@ public class IssueRecordController {
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<IssueRecordResponseDTO>> getIssueRecordsByMemberId(
             @PathVariable Long memberId) {
-        List<IssueRecordResponseDTO> response =
-                issueRecordService.getIssueRecordsByMemberId(memberId);
+        List<IssueRecordResponseDTO> response = issueRecordService.getIssueRecordsByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
 
