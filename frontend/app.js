@@ -128,9 +128,7 @@ const app = {
 
     // ──────────────────────────────────────────────
     // Core API helper
-    // Response shape from Libary-backend:
-    //   - Success  → the DTO or List<DTO> directly (NO wrapper)
-    //   - Error    → { status, message, timestamp [, errors] }
+    // Updated for root backend's ApiResponse wrapper
     // ──────────────────────────────────────────────
     async apiCall(endpoint, method = 'GET', body = null) {
         const options = {
@@ -141,24 +139,29 @@ const app = {
 
         const response = await fetch(`${API_BASE}${endpoint}`, options);
 
-        // No-content success (shouldn't happen here but safe guard)
         if (response.status === 204) return null;
 
-        const data = await response.json();
+        const result = await response.json();
 
+        // Handle root project's ApiResponse wrapper: { success, message, data, ... }
+        if (result && typeof result === 'object' && 'success' in result) {
+            if (!result.success) {
+                const msg = result.message || `Request failed (${response.status})`;
+                throw new Error(msg);
+            }
+            return result.data; // Extract the actual payload
+        }
+
+        // Fallback for unwrapped responses
         if (!response.ok) {
-            // Backend error shape: { status, message, timestamp }
-            const msg = data.message || `Request failed (${response.status})`;
+            const msg = result.message || `Request failed (${response.status})`;
             throw new Error(msg);
         }
-        return data; // raw DTO or List<DTO>
+        return result;
     },
 
     // ──────────────────────────────────────────────
     // DASHBOARD
-    // GET /books          → BookResponseDTO[]
-    // GET /members        → MemberResponseDTO[]
-    // GET /api/issue-records/active → IssueRecordResponseDTO[]
     // ──────────────────────────────────────────────
     async loadDashboard() {
         try {
@@ -168,7 +171,7 @@ const app = {
                 this.apiCall('/api/issue-records/active')
             ]);
 
-            // books / members are plain arrays; activeIssues is a plain array
+            // books / members / activeIssues are now correctly extracted from the wrapper
             const availableCount = books.filter(b => b.availability === true).length;
 
             document.getElementById('stat-total-books').innerText    = books.length;
@@ -323,16 +326,6 @@ const app = {
 
     // ──────────────────────────────────────────────
     // ISSUES
-    // GET /api/issue-records/active  → IssueRecordResponseDTO[]
-    // GET /api/issue-records         → IssueRecordResponseDTO[]
-    // GET /members/{id}/books        → IssueRecordResponseDTO[] (per member)
-    // POST /api/issue-records/issue  body: { bookId, memberId }
-    // PUT  /api/issue-records/return body: { issueId }
-    //
-    // IssueRecordResponseDTO fields:
-    //   issueId, bookId, bookTitle, bookAuthor,
-    //   memberId, memberName, memberEmail,
-    //   issueDate (LocalDate→"YYYY-MM-DD"), returnDate (null if active)
     // ──────────────────────────────────────────────
     async loadIssues(type = 'active') {
         try {
@@ -348,8 +341,7 @@ const app = {
 
     async viewMemberIssues(memberId, memberName) {
         try {
-            // GET /members/{id}/books → wired to issueRecordService.getIssueRecordsByMemberId
-            const issues = await this.apiCall(`/members/${memberId}/books`);
+            const issues = await this.apiCall(`/members/${memberId}/issues`);
 
             // Switch UI to Issues tab
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -407,8 +399,8 @@ const app = {
         try {
             // Only show available books in the dropdown
             const [books, members] = await Promise.all([
-                this.apiCall('/books/available'),   // GET /books/available
-                this.apiCall('/members')            // GET /members
+                this.apiCall('/books/available'),
+                this.apiCall('/members')
             ]);
 
             bookSelect.innerHTML = '<option value="" disabled selected>Select an available book</option>';
@@ -444,7 +436,6 @@ const app = {
         }
 
         try {
-            // POST /api/issue-records/issue  body: { bookId: Long, memberId: Long }
             await this.apiCall('/api/issue-records/issue', 'POST', {
                 bookId:   parseInt(bookId,   10),
                 memberId: parseInt(memberId, 10)
@@ -465,8 +456,8 @@ const app = {
     async returnBook(issueId) {
         if (!confirm('Mark this book as returned?')) return;
         try {
-            // PUT /api/issue-records/return  body: { issueId: Long }
-            await this.apiCall('/api/issue-records/return', 'PUT', { issueId });
+            // Libary-backend uses: PUT /api/issue-records/return/{issueId}
+            await this.apiCall(`/api/issue-records/return/${issueId}`, 'PUT');
             this.showToast('Book returned successfully!', 'success');
 
             // Refresh current tab

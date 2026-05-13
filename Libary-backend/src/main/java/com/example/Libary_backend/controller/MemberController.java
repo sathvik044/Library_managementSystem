@@ -42,7 +42,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getAllMembers());
     }
 
-    @GetMapping("/{memberId}/books")
+    @GetMapping("/{memberId}/issues")
     public ResponseEntity<List<IssueRecordResponseDTO>> getIssuedBooksForMember(
             @PathVariable Long memberId) {
         return ResponseEntity.ok(issueRecordService.getIssueRecordsByMemberId(memberId));

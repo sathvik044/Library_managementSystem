@@ -31,12 +31,12 @@ public class IssueRecordController {
 
     /**
      * Return a book to the library
-     * PUT /api/issue-records/return
+     * PUT /api/issue-records/return/{issueId}
      */
-    @PutMapping("/return")
+    @PutMapping("/return/{issueId}")
     public ResponseEntity<IssueRecordResponseDTO> returnBook(
-            @RequestBody ReturnBookRequestDTO requestDTO) {
-        IssueRecordResponseDTO response = issueRecordService.returnBook(requestDTO);
+            @PathVariable Long issueId) {
+        IssueRecordResponseDTO response = issueRecordService.returnBook(issueId);
         return ResponseEntity.ok(response);
     }
 

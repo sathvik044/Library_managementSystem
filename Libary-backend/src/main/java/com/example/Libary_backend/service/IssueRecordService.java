@@ -9,7 +9,7 @@ public interface IssueRecordService {
     
     IssueRecordResponseDTO issueBook(IssueRecordRequestDTO requestDTO);
     
-    IssueRecordResponseDTO returnBook(ReturnBookRequestDTO requestDTO);
+    IssueRecordResponseDTO returnBook(Long issueId);
     
     IssueRecordResponseDTO getIssueRecordById(Long issueId);
     

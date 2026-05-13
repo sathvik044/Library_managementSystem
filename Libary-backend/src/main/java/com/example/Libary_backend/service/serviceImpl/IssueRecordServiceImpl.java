@@ -89,9 +89,9 @@ public class IssueRecordServiceImpl implements IssueRecordService {
      * Rule 4: Set return date to current date and mark book as available
      */
     @Override
-    public IssueRecordResponseDTO returnBook(ReturnBookRequestDTO requestDTO) {
+    public IssueRecordResponseDTO returnBook(Long issueId) {
         
-        IssueRecord issue = issueRecordRepository.findById(requestDTO.getIssueId())
+        IssueRecord issue = issueRecordRepository.findById(issueId)
                 .orElseThrow(() -> new IssueRecordNotFoundException("Issue record not found"));
 
         // Rule 4: Return book - set return date and mark available
